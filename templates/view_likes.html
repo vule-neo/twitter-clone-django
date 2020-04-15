@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<center>
+<h2 class="mt-5">{{post.likes.count}} people liked this post!</h2>
+{% for like in post_likes %}
+	<h3><a href="{% url 'twitter_comps:profile_view' like.liker.id %}">{{like.liker.user.username}}</a></h3>
+{% endfor %}
+</center>
+{% endblock %}

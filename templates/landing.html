@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Hello!</h1>
+<h3>Feel free to view my page!</h3>
+<h3>Here's some stuff to begin with</h3>
+
+<h5><a href="{% url 'twitter_comps:home' %}">Home page</a></h5>
+<h5><a href="{% url 'twitter_comps:profiles' %}">View our users and their profiles!</a></h5>
+<h5><a href="{% url 'twitter_comps:registration_page' %}">New here? Sign up now!</a></h5>
+<h5><a href="{% url 'twitter_comps:login_page' %}">Already have an account? Log in here!</a></h5>
+
+{% endblock %}

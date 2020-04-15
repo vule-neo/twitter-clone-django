@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="mt-5">Hi, {{profile.user.username}}, you can edit your profile here.</h1>
+
+<div class="mt-5">
+	<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{form.as_p}}
+		<button type="submit" class="btn btn-primary">Submit changes</button>
+	</form>
+</div>
+
+{% endblock %}

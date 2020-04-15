@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  {% if user.is_authenticated %}
+  	<h1><a class="btn btn-danger btn-block mt-3 mb-2" href="{% url 'twitter_comps:profile_view' current_profile.id %}">See profile  <i class="far fa-id-card"></i></a></h1>
+
+  	<h1><a class="btn btn-success btn-block mt-3 mb-5" href="{% url 'twitter_comps:edit_profile' current_profile.id %}">Edit your profile  <i class="fas fa-user-edit"></i></a></h1>
+  {% endif %}
+<form method="POST">
+	{% csrf_token %}
+	<div class="form-group mt-2">
+		<label for="exampleFormControlTextarea1" style="font-family: serif;">Tweet something <i class="fas fa-upload"></i></label>
+		<textarea class="form-control shadow p-3 mb-1 bg-white rounded" id="exampleFormControlTextarea1" rows="3" name="tweet-text"></textarea>
+		<button class="btn-lg btn-primary" type="submit">Post  <i class="fas fa-arrow-circle-right"></i></button>
+	</div>
+</form>
+
+{% for retweet in all_retweets %}
+{% if current_profile in retweet.reetweeter.followers.all %}
+    <div class="alert alert-light border border-danger mt-5 mb-5" role="alert">
+
+      <p style="float: right;">{{retweet.date_of_retweet}}</p>
+      <h6><b>{{retweet.reetweeter.user.username}}</b> retweeted:</h6>
+      
+      <div class="alert alert-light border border-primary mt-2 mb-2" role="alert">
+        <p style="float: right;">{{retweet.tweet.date}}</p>
+        <h6>{{retweet.tweet_author.user.username}}</h6>
+        <h5>{{retweet.tweet.text}}</h5>
+      </div>
+    </div>
+    {% endif %}
+{% endfor %}
+
+{% for post in all_posts %}
+{% if current_profile in post.poster.followers.all %}
+<div class="alert alert-light border border-primary mt-5 mb-5" role="alert">
+	<a href="{% url 'twitter_comps:profile_view' post.poster.id %}"><img src="{{post.poster.profile_picture.url}}" width="40px" height="40px"></a>
+	<a href="{% url 'twitter_comps:profile_view' post.poster.id %}"><b>{{post.poster.user.username}}</b></a>
+	<p style="float: right;">{{post.date}}</p>
+  <h5>{{post.text}}</h5>
+
+  <div class="gadgets" style="text-align: center; background:#cceeff; padding: 10px">
+     <a href="{% url 'twitter_comps:view_likes' post.id %}">{{post.likes.count}} likes</a>
+  	<a href="{% url 'twitter_comps:like_post' post.id %}" class="btn btn-primary mr-5"><i class="fas fa-thumbs-up"></i></a>
+  	<button class="btn btn-secondary ml-5 mr-5" id="commentButton"><i class="far fa-comment"></i></i></a></button>
+  	
+  	{% if post.poster == current_profile %}
+  		<a href="{% url 'twitter_comps:retweet' post.id %}" class="btn btn-success mr-5 ml-5"><i class="fas fa-share"></i></i></a>
+  		<a href="{% url 'twitter_comps:delete_post' post.id %}" class="btn btn-danger ml-5"><i class="fas fa-trash-alt"></i></i></a>
+  	{% else %}
+  		<a href="{% url 'twitter_comps:retweet' post.id %}" class="btn btn-success ml-5"><i class="fas fa-share"></i></i></a>
+  	{% endif %}
+  
+
+</div>
+
+
+<div class="comment-div">
+
+<form method="POST" action="{% url 'twitter_comps:comment_post' post.id %}">
+  {% csrf_token %}
+  <div class="input-group mb-3 mt-2">
+    <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroup-sizing-default">Add a comment</span>
+    </div>
+    
+    <input name="comment-input" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+   <button type="submit" class="btn btn-primary">Post</button>
+  </div>
+  </form>
+  {% for comment in post.comments.all %}
+  <div class="alert alert-dark" role="alert">
+    <p style="float: right">{{comment.commented_on}}</p>
+    <a href="{% url 'twitter_comps:profile_view' post.poster.id %}">{{comment.commenter}}</a>
+    {% if comment.commenter == current_profile %}
+    <a href="{% url 'twitter_comps:delete_comment' comment.id %}" class="btn-sm btn-danger mr-3" style="float: right;">Delete</a>
+    {% endif %}
+  <h6>{{comment.comment_text}}</h6>
+
+  </div>
+  {% endfor %}
+</div>
+</div>
+<hr style="border: 1px solid black">
+{% endif %}
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1 class="login-page-title">Welcome to the registration page!</h1>
+
+<form class="box" method="post">
+{% csrf_token %}
+	<h1>Sign in</h1>
+	<input type="text" name="username" placeholder="username">
+	<input type="email" name="email" placeholder="email">
+	<input type="password" name="password1" placeholder="enter password">
+	<input type="password" name="password2" placeholder="confirm password">
+	<input type="submit" value="Sign in">
+	<a href="{% url 'twitter_comps:login_page' %}">Already have an account? Log in!</a>
+</form>
+
+
+{% endblock %}

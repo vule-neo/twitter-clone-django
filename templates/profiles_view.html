@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<nav class="navbar navbar-light bg-light mt-3">
+  <form class="form-inline" method="POST">
+  	{% csrf_token %}
+    <input class="form-control mr-sm-2" type="search" placeholder="search..." aria-label="Search" name="search">
+    <button class="btn btn-outline-dark" type="submit">Search profiles  <i class="fas fa-search"></i></button>
+  </form>
+</nav>
+
+{% if search_result %}
+<h3>Search results for: {{search}}</h3>
+	{% for search in search_result %}
+	<div class="alert alert-secondary" role="alert">
+		<h3><a href="{% url 'twitter_comps:profile_view' search.id %}"><img src="{{search.profile_picture.url}}" width="80" height="80">
+	  	{{search.user.username}}</a></h3>
+	  </div>
+	{% endfor %}
+{% else %}
+{% if search %}
+	<h3>No search results for: {{search}}</h3>
+{% endif %}
+{% endif %}
+
+
+<h3 class="mt-5">All profiles:</h3>
+<ul class="list-group mt-5">
+{% for profile in profiles %}
+
+  <h3><li class="list-group-item list-group-item-primary">
+
+  	<a href="{% url 'twitter_comps:profile_view' profile.id %}"><img src="{{profile.profile_picture.url}}" width="80" height="80">
+  	{{profile.user.username}}</a>
+
+  </li></h3>
+	
+{% endfor %}
+</ul>
+
+
+
+{% endblock %}
