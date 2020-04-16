@@ -13,5 +13,15 @@
 	<a href="{% url 'twitter_comps:registration_page' %}">Don't have an account? Sign in!</a>
 </form>
 	
+
+{% if messages %}
+	<div class="alert alert-warning mt-3 mb-3" role="alert">
+		{% for message in messages %}
+		<h4>{{message}}</h4>
+		{% endfor %}
+	</div>
+{% endif %}
+
+
 {% endblock %}
 

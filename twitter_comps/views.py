@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import *
 from django.db.models import Q
+from django.contrib import messages
 
 
 def landing(request):
@@ -50,6 +51,9 @@ def registration_page(request):
 			user = authenticate(username=username, password=password1)
 			login(request, user)
 			return redirect("/")
+		else:
+			messages.error(request, "Something went wrong, try again.")
+			return redirect("twitter_comps:registration_page")
 
 	return render(request, "register.html")
 
@@ -61,6 +65,7 @@ def login_page(request):
 			user = authenticate(username=username, password=password)
 			login(request, user)
 		else:
+			messages.error(request, "Login failed.")
 			return redirect("twitter_comps:login_page")
 		return redirect("twitter_comps:home")
 
@@ -186,6 +191,7 @@ def add_follower(request, id):
 	current_profile = Profile.objects.get(user=request.user)
 	if current_profile not in profile.followers.all():
 		profile.followers.add(current_profile)
+		
 		return redirect("twitter_comps:profile_view", id=profile.id)
 
 	else:
